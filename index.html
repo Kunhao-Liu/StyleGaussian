@@ -1,0 +1,578 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+	<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V3D20SW4N4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-V3D20SW4N4');
+</script>
+	
+	<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+	<title>StyleRF: Zero-shot 3D Style Transfer of Neural Radiance Fields</title>
+  <link rel="stylesheet" href="assets/css/Highlight-Clean.css">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <script type="module" src="https://unpkg.com/@google/model-viewer@2.0.1/dist/model-viewer.min.js"></script>
+  <link rel="manifest" href="site.webmanifest">
+
+  <meta property="og:site_name" content="StyleRF" />
+  <meta property="og:type" content="video.other" />
+  <meta property="og:title" content="StyleRF: Zero-shot 3D Style Transfer of Neural Radiance Fields" />
+  <meta property="og:description" content="StyleRF: Zero-shot 3D Style Transfer of Neural Radiance Fields, 2023." />
+  <script type="module" src="https://unpkg.com/@google/model-viewer@2.0.1/dist/model-viewer.min.js"></script>
+
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="assets/css/codemirror.min.css">
+  <link rel="stylesheet" href="assets/css/app.css">
+
+  <script src="assets/js/jquery.min.js"></script>
+  <script src="assets/js/bootstrap.min.js"></script>
+  <script src="assets/js/codemirror.min.js"></script>
+  <script src="assets/js/clipboard.min.js"></script>
+  <script src="assets/js/video_comparison.js"></script>
+  <script src="assets/js/app.js"></script>
+
+</head>
+
+<body>
+    <div class="highlight-clean" style="padding-bottom: 10px;">
+	<div class="container" style="max-width: 950px;">
+    <div class="row" id="title-row" style="max-width: 100%; margin: 0 auto; display: inline-block">
+        <h1 class="col-md-12 text-center" id="title">
+          <b>StyleRF</b>: Zero-shot 3D Style Transfer of Neural Radiance Fields <br>
+            <small>
+                CVPR 2023
+            </small>
+        </h1>
+    </div>
+	</div>
+	<div class="container" style="max-width: 950px;">
+		<div class="row" id="author-row" style="margin:0 auto;">
+      <div class="col-md-12 text-center" style="display: table; margin:0 auto">
+          <table class="author-table" id="author-table">
+              <tr>
+                  <td>
+                      <a style="text-decoration:none" href="https://kunhao-liu.github.io/">
+                        <b>Kunhao Liu</b>
+                      </a>
+                      <br>Nanyang Technological University, Singapore
+                  </td>
+                  <td>
+                      <a style="text-decoration:none" href="https://fnzhan.com/">
+                        <b>Fangneng Zhan</b>
+                      </a>
+                      <br>Max Planck Institute for Informatics, Germany
+                  </td>
+                  <td>
+                      <span style="text-decoration:none" >
+                        <b>Yiwen Chen</b>
+                      </span>
+                      <br>Nanyang Technological University, Singapore
+                  </td>
+                  <td>
+                    <span style="text-decoration:none">
+                      <b>Jiahui Zhang</b>
+                    </span>
+                    <br>Nanyang Technological University, Singapore
+                  </td>
+              </tr>
+              <tr>
+                <td>
+                    <a style="text-decoration:none" href="https://yingchen001.github.io/">
+                      <b>Yingchen Yu</b>
+                    </a>
+                    <br>Nanyang Technological University, Singapore
+                </td>
+                <td>
+                    <a style="text-decoration:none" href="https://mcrlab.net/">
+                      <b>Abdulmotaleb El Saddik</b>
+                    </a>
+                    <br>University of Ottawa, Canada
+                    <br>MBZUAI, United Arab Emirates
+                </td>
+                <td>
+                  <a style="text-decoration:none" href="https://personal.ntu.edu.sg/shijian.lu/">
+                    <b>Shijian Lu</b>
+                  </a>
+                  <br>Nanyang Technological University, Singapore
+                </td>
+                <td>
+                  <a style="text-decoration:none" href="http://www.cs.cmu.edu/~epxing/">
+                    <b>Eric Xing</b>
+                  </a>
+                  <br>Carnegie Mellon University, USA
+                  <br>MBZUAI, United Arab Emirates
+                </td>
+            </tr>
+          </table>
+      </div>
+  </div>   
+	</div>
+  <div class="row">
+    <div class="col-sm-6 col-sm-offset-3 text-center">
+        <ul class="nav nav-pills nav-justified">
+            <li>
+                <a href="https://arxiv.org/abs/2303.10598">
+                <img src="./resources/paper.png" height="50px">
+                    <h4><strong>Paper</strong></h4>
+                </a>
+            </li>
+            <li>
+                <a href="https://github.com/Kunhao-Liu/StyleRF" target="_blank">
+                <img src="./resources/github.png" height="50px">
+                    <h4><strong>Code</strong></h4>
+                </a>
+            </li>
+        </ul>
+    </div>
+  </div>
+    </div>
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        <image src="./resources/teaser.png" class="img-responsive" alt="overview" width="60%" style="width: 850px;margin:auto;">
+    </div>
+  </div>
+    <hr class="divider" />
+    <div class="container" style="max-width: 950px;">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Abstract</h2>
+                <p class="text-justify">
+                  3D style transfer aims to render stylized novel views of a 3D scene with multi-view consistency. However, most existing work suffers from a three-way dilemma over accurate geometry reconstruction, high-quality stylization, and being generalizable to arbitrary new styles. We propose <b>StyleRF (Style Radiance Fields)</b>, an innovative 3D style transfer technique that resolves the three-way dilemma by performing style transformation within the feature space of a radiance field. StyleRF employs an explicit grid of high-level features to represent 3D scenes, with which high-fidelity geometry can be reliably restored via volume rendering. In addition, it transforms the grid features according to the reference style which directly leads to high-quality zero-shot style transfer. StyleRF consists of two innovative designs. The first is sampling-invariant content transformation that makes the transformation invariant to the holistic statistics of the sampled 3D points and accordingly ensures multi-view consistency. The second is deferred style transformation of 2D feature maps which is equivalent to the transformation of 3D points but greatly reduces memory footprint without degrading multi-view consistency. Extensive experiments show that StyleRF achieves superior 3D stylization quality with precise geometry reconstruction and it can generalize to various new styles in a zero-shot manner.
+          </p>
+				<h3>TL;DR:</h3>
+        <p class="text-justify">
+          StyleRF is a new 3D style transfer technique that resolves the dilemma of accurate geometry reconstruction, high-quality stylization, and being generalizable to arbitrary new styles. It performs style transformation within the feature space of a radiance field, and employs an explicit grid of high-level features to represent 3D scenes.        </p>
+        </div>
+        </div>
+    </div>
+
+
+    <hr class="divider" />
+    <div class="container" style="max-width: 950px;">
+        <div class="row">
+            <div class="col-md-12">
+                <h2><b>StyleRF</b></h2>
+                <image src="./resources/overview.png" class="img-responsive" alt="overview" width="60%" style="width: 850px;margin:auto;"></image>
+                <p class="text-justify">
+                  StyleRF achieves zero-shot 3D style transfer by first reconstructing a 3D grid that contains high-level VGG features. During the rendering process, a batch of sampled points is taken along a ray, and their corresponding features are extracted. Each of these features is then transformed independently using <b><i>Sampling-Invariant Content Transformation</i></b>, without considering the holistic statistics of the point batch. The features are then converted to a feature map using Volume Rendering.
+Next, the <b><i>Deferred Style Transformation</i></b> algorithm adaptively transforms the feature map by incorporating the sum weight of the sampled points along the ray and the style information, while <i>strictly maintaining multi-view consistency</i>. Finally, a stylized novel view is generated using a CNN decoder.
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+  <hr class="divider" />
+    <div class="container" style="max-width: 950px;">
+        <div class="row">
+            <div class="col-sm-12">
+                <h2>3D Stylization Comparisons</h2>
+                <p class="text-justify">
+                  StyleRF achieves superior 3D stylization quality with precise geometry reconstruction and it can generalize to various new styles in a zero-shot manner.
+                </p>
+                <i>Open fullscreen for details</i>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-3 col-sm-3 col-xs-12 gallery center-block text-center">
+              <span>Original RGB & Style image</span>
+              <div class="embed-responsive embed-responsive-4by3">
+                <image src="assets\imgs\flower_comp1.jpg" style="width:70px;position:absolute;z-index:1;left:2px"></image>
+                <video controls loop muted autoplay class="embed-responsive-item">
+                  <source src="assets\videos\flower_gt.mp4" type="video/mp4">
+                </video>
+              </div>
+            </div>
+
+
+            <div class="col-md-3 col-sm-3 col-xs-12 gallery center-block text-center">
+                <b>StyleRF</b>
+                <div class="embed-responsive embed-responsive-4by3">
+                  <video controls controls loop muted autoplay class="embed-responsive-item">
+                    <source src="assets\videos\flower_comp1_stylerf.mp4" type="video/mp4">
+                  </video>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-sm-3 col-xs-12 gallery center-block text-center">
+              <span>Hyper</span>
+              <div class="embed-responsive embed-responsive-4by3">
+                <video controls loop muted autoplay class="embed-responsive-item">
+                  <source src="assets\videos\flower_comp1_hyper.mp4" type="video/mp4">
+                </video>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-xs-12 gallery center-block text-center">
+              <span>LSNV</span>
+              <div class="embed-responsive embed-responsive-4by3">
+                <video controls loop muted autoplay class="embed-responsive-item">
+                  <source src="assets\videos\flower_comp1_lsnv.mp4" type="video/mp4">
+                </video>
+              </div>
+            </div>
+        </div>
+        
+        <div class="row">
+
+          <div class="col-md-3 col-sm-3 col-xs-12 gallery center-block text-center">
+            <span>Original RGB & Style image</span>
+            <div class="embed-responsive embed-responsive-4by3">
+              <image src="assets\imgs\flower_comp2.jpg" style="width:70px;position:absolute;z-index:1;left:2px"></image>
+              <video controls loop muted autoplay class="embed-responsive-item">
+                <source src="assets\videos\flower_gt.mp4" type="video/mp4">
+              </video>
+            </div>
+          </div>
+
+
+          <div class="col-md-3 col-sm-3 col-xs-12 gallery center-block text-center">
+              <b>StyleRF</b>
+              <div class="embed-responsive embed-responsive-4by3">
+                <video controls loop muted autoplay class="embed-responsive-item">
+                  <source src="assets\videos\flower_comp2_stylerf.mp4" type="video/mp4">
+                </video>
+              </div>
+          </div>
+
+          <div class="col-md-3 col-sm-3 col-xs-12 gallery center-block text-center">
+            <span>Hyper</span>
+            <div class="embed-responsive embed-responsive-4by3">
+              <video controls loop muted autoplay class="embed-responsive-item">
+                <source src="assets\videos\flower_comp2_hyper.mp4" type="video/mp4">
+              </video>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-3 col-xs-12 gallery center-block text-center">
+            <span>LSNV</span>
+            <div class="embed-responsive embed-responsive-4by3">
+              <video controls loop muted autoplay class="embed-responsive-item">
+                <source src="assets\videos\flower_comp2_lsnv.mp4" type="video/mp4">
+              </video>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+
+          <div class="col-md-3 col-sm-3 col-xs-12 gallery center-block text-center">
+            <span>Original RGB & Style image</span>
+            <div class="embed-responsive embed-responsive-4by3">
+              <image src="assets\imgs\horns_comp2.jpg" style="width:70px;position:absolute;z-index:1;left:2px"></image>
+              <video controls loop muted autoplay class="embed-responsive-item">
+                <source src="assets\videos\horns_gt.mp4" type="video/mp4">
+              </video>
+            </div>
+          </div>
+
+
+          <div class="col-md-3 col-sm-3 col-xs-12 gallery center-block text-center">
+              <b>StyleRF</b>
+              <div class="embed-responsive embed-responsive-4by3">
+                <video controls loop muted autoplay class="embed-responsive-item">
+                  <source src="assets\videos\horns_comp2_stylerf.mp4" type="video/mp4">
+                </video>
+              </div>
+          </div>
+
+          <div class="col-md-3 col-sm-3 col-xs-12 gallery center-block text-center">
+            <span>Hyper</span>
+            <div class="embed-responsive embed-responsive-4by3">
+              <video controls loop muted autoplay class="embed-responsive-item">
+                <source src="assets\videos\horns_comp2_hyper.mp4" type="video/mp4">
+              </video>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-3 col-xs-12 gallery center-block text-center">
+            <span>LSNV</span>
+            <div class="embed-responsive embed-responsive-4by3">
+              <video controls loop muted autoplay class="embed-responsive-item">
+                <source src="assets\videos\horns_comp2_lsnv.mp4" type="video/mp4">
+              </video>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+
+          <div class="col-md-3 col-sm-3 col-xs-12 gallery center-block text-center">
+            <span>Original RGB & Style image</span>
+            <div class="embed-responsive embed-responsive-4by3">
+              <image src="assets\imgs\horns_comp1.jpg" style="width:70px;position:absolute;z-index:1;left:2px"></image>
+              <video controls loop muted autoplay class="embed-responsive-item">
+                <source src="assets\videos\horns_gt.mp4" type="video/mp4">
+              </video>
+            </div>
+          </div>
+
+
+          <div class="col-md-3 col-sm-3 col-xs-12 gallery center-block text-center">
+              <b>StyleRF</b>
+              <div class="embed-responsive embed-responsive-4by3">
+                <video controls loop muted autoplay class="embed-responsive-item">
+                  <source src="assets\videos\horns_comp1_stylerf.mp4" type="video/mp4">
+                </video>
+              </div>
+          </div>
+
+          <div class="col-md-3 col-sm-3 col-xs-12 gallery center-block text-center">
+            <span>Hyper</span>
+            <div class="embed-responsive embed-responsive-4by3">
+              <video controls loop muted autoplay class="embed-responsive-item">
+                <source src="assets\videos\horns_comp1_hyper.mp4" type="video/mp4">
+              </video>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-3 col-xs-12 gallery center-block text-center">
+            <span>LSNV</span>
+            <div class="embed-responsive embed-responsive-4by3">
+              <video controls loop muted autoplay class="embed-responsive-item">
+                <source src="assets\videos\horns_comp1_lsnv.mp4" type="video/mp4">
+              </video>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+
+          <div class="col-md-3 col-sm-3 col-xs-12 gallery center-block text-center">
+            <span>Original RGB & Style image</span>
+            <div class="embed-responsive embed-responsive-4by3">
+              <image src="assets\imgs\trex_comp1.jpg" style="width:70px;position:absolute;z-index:1;left:2px"></image>
+              <video controls loop muted autoplay class="embed-responsive-item">
+                <source src="assets\videos\trex_gt.mp4" type="video/mp4">
+              </video>
+            </div>
+          </div>
+
+
+          <div class="col-md-3 col-sm-3 col-xs-12 gallery center-block text-center">
+              <b>StyleRF</b>
+              <div class="embed-responsive embed-responsive-4by3">
+                <video controls loop muted autoplay class="embed-responsive-item">
+                  <source src="assets\videos\trex_comp1_stylerf.mp4" type="video/mp4">
+                </video>
+              </div>
+          </div>
+
+          <div class="col-md-3 col-sm-3 col-xs-12 gallery center-block text-center">
+            <span>Hyper</span>
+            <div class="embed-responsive embed-responsive-4by3">
+              <video controls loop muted autoplay class="embed-responsive-item">
+                <source src="assets\videos\trex_comp1_hyper.mp4" type="video/mp4">
+              </video>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-3 col-xs-12 gallery center-block text-center">
+            <span>LSNV</span>
+            <div class="embed-responsive embed-responsive-4by3">
+              <video controls loop muted autoplay class="embed-responsive-item">
+                <source src="assets\videos\trex_comp1_lsnv.mp4" type="video/mp4">
+              </video>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+
+          <div class="col-md-3 col-sm-3 col-xs-12 gallery center-block text-center">
+            <span>Original RGB & Style image</span>
+            <div class="embed-responsive embed-responsive-4by3">
+              <image src="assets\imgs\trex_comp2.jpg" style="width:70px;position:absolute;z-index:1;left:2px"></image>
+              <video controls loop muted autoplay class="embed-responsive-item">
+                <source src="assets\videos\trex_gt.mp4" type="video/mp4">
+              </video>
+            </div>
+          </div>
+
+
+          <div class="col-md-3 col-sm-3 col-xs-12 gallery center-block text-center">
+              <b>StyleRF</b>
+              <div class="embed-responsive embed-responsive-4by3">
+                <video controls loop muted autoplay class="embed-responsive-item">
+                  <source src="assets\videos\trex_comp2_stylerf.mp4" type="video/mp4">
+                </video>
+              </div>
+          </div>
+
+          <div class="col-md-3 col-sm-3 col-xs-12 gallery center-block text-center">
+            <span>Hyper</span>
+            <div class="embed-responsive embed-responsive-4by3">
+              <video controls loop muted autoplay class="embed-responsive-item">
+                <source src="assets\videos\trex_comp2_hyper.mp4" type="video/mp4">
+              </video>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-3 col-xs-12 gallery center-block text-center">
+            <span>LSNV</span>
+            <div class="embed-responsive embed-responsive-4by3">
+              <video controls loop muted autoplay class="embed-responsive-item">
+                <source src="assets\videos\trex_comp2_lsnv.mp4" type="video/mp4">
+              </video>
+            </div>
+          </div>
+        </div>
+
+    </div>
+
+    <hr class="divider" />
+
+      <div class="container" style="max-width: 950px;">
+
+        <div class="row">
+          <div class="col-sm-12">
+              <h2>Compositional Style Transfer</h2>
+              <p class="text-justify">
+                Thanks to its precise geometry reconstruction, StyleRF can be seamlessly integrated with NeRF-based object segmentation for compositional 3D style transfer.
+                Due to its zero-shot nature, StyleRF can create infinite combinations of styles without additional training, producing numerous artistic creations and inspirations.
+              </p>
+              <i>Open fullscreen for details</i>
+          </div>
+        </div>
+
+          <div class="row">
+
+            <div class="col-md-3 col-sm-3 col-xs-12 gallery center-block text-center">
+              <div class="embed-responsive embed-responsive-4by3">
+                <video controls loop muted autoplay class="embed-responsive-item">
+                  <source src="assets\videos\13 112.mp4" type="video/mp4">
+                </video>
+              </div>
+            </div>
+
+
+            <div class="col-md-3 col-sm-3 col-xs-12 gallery center-block text-center">
+                <div class="embed-responsive embed-responsive-4by3">
+                  <video controls loop muted autoplay class="embed-responsive-item">
+                    <source src="assets\videos\14 144.mp4" type="video/mp4">
+                  </video>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-sm-3 col-xs-12 gallery center-block text-center">
+              <div class="embed-responsive embed-responsive-4by3">
+                <video controls loop muted autoplay class="embed-responsive-item">
+                  <source src="assets\videos\71 145.mp4" type="video/mp4">
+                </video>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-xs-12 gallery center-block text-center">
+              <div class="embed-responsive embed-responsive-4by3">
+                <video controls loop muted autoplay class="embed-responsive-item">
+                  <source src="assets\videos\141 2.mp4" type="video/mp4">
+                </video>
+              </div>
+            </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-12">
+            <h2>Style Interpolation</h2>
+            <p class="text-justify">
+              StyleRF can smoothly interpolate different styles thanks to its high-level feature representation of a 3D scene.
+              StyleRF can not only transfer arbitrary styles in a zero-shot manner but also generate non-existent stylization via multi-style interpolation.
+            </p>
+            <i>Open fullscreen for details</i>
+          </div>
+        </div>
+
+        <div class="row">
+          
+          <div class="col-md-3 col-sm-3 col-xs-12 gallery center-block text-center">
+            <span>Original RGB</span>
+            <div class="embed-responsive embed-responsive-4by3">
+              <video controls loop muted autoplay class="embed-responsive-item">
+                <source src="assets\videos\stop.mp4" type="video/mp4">
+              </video>
+            </div>
+        </div>
+
+          <div class="col-md-3 col-sm-3 col-xs-12 gallery center-block text-center">
+            <span>Result</span>
+            <div class="embed-responsive embed-responsive-4by3">
+              <video controls loop muted autoplay class="embed-responsive-item">
+                <source src="assets\videos\stopsign_interpolation.mp4" type="video/mp4">
+              </video>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-3 col-xs-12 gallery center-block text-center">
+          <span>Original RGB</span>
+          <div class="embed-responsive embed-responsive-4by3">
+            <video controls loop muted autoplay class="embed-responsive-item">
+              <source src="assets\videos\lego_gt.mp4" type="video/mp4">
+            </video>
+          </div>
+      </div>
+
+        <div class="col-md-3 col-sm-3 col-xs-12 gallery center-block text-center">
+          <span>Result</span>
+          <div class="embed-responsive embed-responsive-4by3">
+            <video controls loop muted autoplay class="embed-responsive-item">
+              <source src="assets\videos\lego_interpolation.mp4" type="video/mp4">
+            </video>
+          </div>
+      </div>
+        </div>
+          
+
+        
+      
+
+      </div>
+
+    <hr class="divider" />
+  
+    <div class="container" style="max-width: 950px;">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Citation</h2>
+                Consider citing us if you find this project is helpful. <br>
+                <code>
+                    @article{liu2023stylerf,<br>
+                    &nbsp; author = {Kunhao Liu and Fangneng Zhan and Yiwen Chen and Jiahui Zhang and Yingchen Yu and Abdulmotaleb El Saddik and Shijian Lu and Eric Xing},<br>
+                    &nbsp; title  = {StyleRF: Zero-shot 3D Style Transfer of Neural Radiance Fields},<br>
+                    &nbsp; booktitle = {Proc. IEEE Conf. on Computer Vision and Pattern Recognition (CVPR)},<br>
+                    &nbsp; year   = {2023},<br>
+                }</code></div>
+        </div>
+    </div>
+
+    <hr class="divider" />
+    <div class="container" style="max-width: 950px;">
+      <div class="row">
+          <div class="col-md-12">
+              <h2>Acknowledgements</h2>
+              <p>This webpage integrates components from many websites, including <a href="https://dorverbin.github.io/refnerf/">RefNeRF</a>, <a href="https://m-niemeyer.github.io/regnerf/">RegNeRF</a>, <a href="https://dreamfusion3d.github.io/">DreamFusion</a>, and <a href="https://richzhang.github.io/webpage-template/">Richard Zhang's template</a>.
+                We sincerely thank the authors for their great work and websites.</p>
+                <br></p>
+            </div>
+          </div>
+    </div>
+
+    <script src="https://polyfill.io/v3/polyfill.js?features=IntersectionObserver"></script>
+    <script src="/assets/js/yall.js"></script>
+    <script>
+        yall(
+            {
+                observeChanges: true
+            }
+        );
+    </script>
+    <script src="/assets/js/scripts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://uploads-ssl.webflow.com/51e0d73d83d06baa7a00000f/js/webflow.fd002feec.js"></script>
+    <!-- Import the component -->
+</body>
+
+</html>
