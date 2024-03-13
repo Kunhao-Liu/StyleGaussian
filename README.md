@@ -6,6 +6,21 @@ This repository contains a pytorch implementation for the paper: [StyleGaussian:
 
 ![teaser](https://kunhao-liu.github.io/StyleGaussian/resources/teaser.jpg)
 
+
+---
+
+## Contents
+- [1 Installation](#1-installation)
+- [2 Quick Start](#2-quick-start)
+  - [2.1 Interactive Remote Viewer](#21-interactive-remote-viewer)
+  - [2.2 Inference Rendering](#22-inference-rendering)
+- [3 Training](#3-training)
+  - [3.1 Train from Scratch](#31-train-from-scratch)
+  - [3.2 Train Step by Step](#32-train-step-by-step)
+  - [3.3 Train with Initialization](#33-train-with-initialization)
+- [4 Acknowledgements](#4-acknowledgements)
+- [5 Citation](#5-citation)
+
 ## 1 Installation
 
 We use [Mamba](https://mamba.readthedocs.io/en/latest/installation/mamba-installation.html) to manage the environment for its quick speed, while Conda can also be used. 
