@@ -75,7 +75,7 @@ python train.py --data datasets/train --wikiartdir datasets/wikiart --exp_name d
 where `dataset_path` is the path to the training dataset, `wikiart_path` is the path to the WikiArt dataset, and `exp_name` is the name of the experiment. The training process will be saved in the `output/[scene_name]/artistic/[exp_name]` folder. `--exp_name` is an optional argument.
 
 ### 3.2 Train Step by Step
-StyleGaussian is trained in three steps: *reconstruction training*, *feature embedding training*, and *style transfer training*. These three steps can be trained separately by:
+Alternatively, you can train the model step by step. StyleGaussian is trained in three steps: *reconstruction training*, *feature embedding training*, and *style transfer training*. These three steps can be trained separately by:
 
 #### 1. Reconstruction Training
 ```bash
