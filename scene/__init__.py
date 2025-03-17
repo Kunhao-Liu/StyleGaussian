@@ -76,10 +76,10 @@ class Scene:
             self.test_cameras[resolution_scale] = cameraList_from_camInfos(scene_info.test_cameras, resolution_scale, args)
 
             # extract vgg features for each camera
-            if vgg_encoder:
-                print("Extracting VGG features...")
-                for cam in tqdm(self.train_cameras[resolution_scale]):
-                    cam.extract_vgg_features(vgg_encoder)
+            # if vgg_encoder:
+            #     print("Extracting VGG features...")
+            #     for cam in tqdm(self.train_cameras[resolution_scale]):
+            #         cam.extract_vgg_features(vgg_encoder)
 
         if load_path:
             extension = os.path.splitext(load_path)[1]

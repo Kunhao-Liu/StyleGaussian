@@ -53,6 +53,7 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, ply_path
             viewpoint_stack = scene.getTrainCameras().copy()
         viewpoint_cam = viewpoint_stack.pop(randint(0, len(viewpoint_stack)-1))
 
+        viewpoint_cam.extract_vgg_features(vgg_encoder)
         # Render
         if (iteration - 1) == debug_from:
             pipe.debug = True
@@ -64,7 +65,7 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, ply_path
         gt_feature = viewpoint_cam.vgg_features
         loss = l1_loss(rendered_feature, gt_feature)
         loss.backward()
-
+        del viewpoint_cam.vgg_features, gt_feature, rendered_feature
         iter_end.record()
 
         with torch.no_grad():

@@ -100,6 +100,7 @@ def training(dataset, opt, pipe, ckpt_path, decoder_path, style_weight, content_
             viewpoint_stack = scene.getTrainCameras().copy()
         viewpoint_cam = viewpoint_stack.pop(randint(0, len(viewpoint_stack)-1))
 
+        viewpoint_cam.extract_vgg_features(vgg_encoder)
 
         # content preserve training
         if content_preserve and iteration % 7 == 0:
@@ -151,7 +152,7 @@ def training(dataset, opt, pipe, ckpt_path, decoder_path, style_weight, content_
 
         loss = content_loss + style_loss * style_weight
         loss.backward()
-
+        del viewpoint_cam.vgg_features
         iter_end.record()
 
         with torch.no_grad():
